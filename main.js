@@ -11,7 +11,7 @@ const originalImgList = galleryItems.map(el => el.original);
 const previewGalleryRefs = galleryItems.map(el => 
   `<li class = 'gallery__item'><a class = 'gallery__link' href = '${el.original}'><img src = '${el.preview}' 
   alt = '${el.description}' class = 'gallery__image' 
-  data-link = '${el.original}'></a></li>`)
+  data-source = '${el.original}'></a></li>`)
   .join(''); 
 
 galleryRef.insertAdjacentHTML('beforeend', previewGalleryRefs);
@@ -22,7 +22,7 @@ function onOpenModalWindow() {
   if (event.target.nodeName !== 'IMG') return;
   lightboxRef.classList.add('is-open');
 
-  lightboxImageRef.src = event.target.dataset.link;
+  lightboxImageRef.src = event.target.dataset.source;
 }   
 
 function onCloseModalWindow() {
@@ -31,26 +31,28 @@ function onCloseModalWindow() {
 }
 
 function onChangeImgToBefore() {
-  originalImgList.forEach((el, inx, arr) => {
+  originalImgList.forEach((el, idx, arr) => {
     if (lightboxImageRef.src === el) {
-      if (inx === 0) return;
-        lightboxImageRef.src = arr[inx - 1];
+      if (idx === 0) return;
+        lightboxImageRef.src = arr[idx - 1];
     }
   })
 }
 
 function onChangeImgToAfter() {
-    originalImgList.forEach((el, inx, arr) => {
-      if (lightboxImageRef.src === el) {
-        if (inx === arr.length - 1) return;
-        lightboxImageRef.src = arr[inx + 1];
+  for (let i = 0; i < originalImgList.length; i += 1){
+    if (i < originalImgList.length - 1){
+      if (lightboxImageRef.src === originalImgList[i]) {
+      
+        return lightboxImageRef.src = originalImgList[i + 1];
+      }
     }
-  })
+  }
 }
 
-galleryRef.addEventListener('click', (event => {
+galleryRef.addEventListener('click', () => {
   onOpenModalWindow();
-}));
+});
 
 closeBtnRef.addEventListener('click', () => {
   onCloseModalWindow();
