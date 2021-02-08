@@ -21,37 +21,41 @@ function onOpenModalWindow() {
   
   if (event.target.nodeName !== 'IMG') return;
   lightboxRef.classList.add('is-open');
-
   lightboxImageRef.src = event.target.dataset.source;
 }   
 
 function onCloseModalWindow() {
-  lightboxRef.classList.remove('is-open');
-  lightboxImageRef.src = '';
+  if (onOpenModalWindow) {
+    lightboxRef.classList.remove('is-open');
+    lightboxImageRef.src = '';
+  }
 }
 
 function onChangeImgToBefore() {
-  originalImgList.forEach((el, idx, arr) => {
-    if (lightboxImageRef.src === el) {
-      if (idx === 0) return;
+  if (onOpenModalWindow) {
+    originalImgList.forEach((el, idx, arr) => {
+      if (lightboxImageRef.src === el) {
+        if (idx === 0) return;
         lightboxImageRef.src = arr[idx - 1];
-    }
-  })
+      }
+    })
+  }
 }
 
 function onChangeImgToAfter() {
-  for (let i = 0; i < originalImgList.length; i += 1){
-    if (i < originalImgList.length - 1){
-      if (lightboxImageRef.src === originalImgList[i]) {
-      
-        return lightboxImageRef.src = originalImgList[i + 1];
+  if (onOpenModalWindow) {
+    for (let i = 0; i < originalImgList.length; i += 1) {
+      if (i < originalImgList.length - 1) {
+        if (lightboxImageRef.src === originalImgList[i]) {
+          return lightboxImageRef.src = originalImgList[i + 1];
+        }
       }
     }
   }
 }
 
 galleryRef.addEventListener('click', () => {
-  onOpenModalWindow();
+  onOpenModalWindow(); 
 });
 
 closeBtnRef.addEventListener('click', () => {
@@ -74,5 +78,4 @@ window.addEventListener('keydown', event => {
   if (event.code === 'ArrowRight') {
     onChangeImgToAfter();
   }
-
 });
